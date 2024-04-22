@@ -50,8 +50,9 @@ bool DeviceContainer::load_component(
       opts.use_intra_process_comms(true);
       std::vector<std::string> remap_rules;
 
-      std::string can_ns = this->get_parameter("can_ns").as_string();
-      if (!can_ns.empty()) {
+      std::string can_ns = this->get_namespace();
+      if (!can_ns.empty())
+      {
         remap_rules.push_back("--ros-args");
         remap_rules.push_back("-r");
         remap_rules.push_back("__ns:=" + can_ns);
@@ -62,7 +63,6 @@ bool DeviceContainer::load_component(
       remap_rules.push_back("-r");
       remap_rules.push_back("__node:=" + node_name);
       RCLCPP_INFO(this->get_logger(), "Hello! from component loader: %s", can_ns.c_str());
-
 
       opts.arguments(remap_rules);
       opts.parameter_overrides(params);
@@ -145,24 +145,24 @@ void DeviceContainer::configure()
 {
   if (!this->get_parameter("can_interface_name", can_interface_name_))
   {
-    throw DeviceContainerException("Fatal: Getting Parameter failed.");
     RCLCPP_ERROR(this->get_logger(), "Parameter can_interface_name could not be read.");
+    throw DeviceContainerException("Fatal: Getting Parameter failed.");
   }
   if (!this->get_parameter("master_config", dcf_txt_))
   {
-    throw DeviceContainerException("Fatal: Getting Parameter failed.");
     RCLCPP_ERROR(this->get_logger(), "Parameter master_config could not be read.");
+    throw DeviceContainerException("Fatal: Getting Parameter failed.");
   }
   if (!this->get_parameter("master_bin", dcf_bin_))
   {
-    throw DeviceContainerException("Fatal: Getting Parameter failed.");
     RCLCPP_ERROR(this->get_logger(), "Parameter master_bin could not be read.");
+    throw DeviceContainerException("Fatal: Getting Parameter failed.");
   }
 
   if (!this->get_parameter("bus_config", bus_config_))
   {
-    throw DeviceContainerException("Fatal: Getting Parameter failed.");
     RCLCPP_ERROR(this->get_logger(), "Parameter bus_config could not be read.");
+    throw DeviceContainerException("Fatal: Getting Parameter failed.");
   }
 
   if (can_interface_name_.length() == 0)
@@ -188,7 +188,6 @@ void DeviceContainer::configure()
   RCLCPP_INFO(this->get_logger(), "\t bus_config %s", bus_config_.c_str());
   RCLCPP_INFO(this->get_logger(), "\t can_interface_name %s", can_interface_name_.c_str());
   RCLCPP_INFO(this->get_logger(), "\t can_ns %s", can_ns_.c_str());
-
 
   try
   {
@@ -374,8 +373,7 @@ void DeviceContainer::init()
 
 void DeviceContainer::init(
   const std::string & can_interface_name, const std::string & master_config,
-  const std::string & bus_config, const std::string & master_bin,
-  const std::string & can_ns)
+  const std::string & bus_config, const std::string & master_bin, const std::string & can_ns)
 {
   can_interface_name_ = can_interface_name;
   dcf_txt_ = master_config;
