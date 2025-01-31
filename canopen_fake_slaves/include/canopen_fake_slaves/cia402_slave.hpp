@@ -193,6 +193,9 @@ protected:
     {
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
       target_position = static_cast<double>(((int32_t)(*this)[0x607A][0])) / 1000.0;
+      clear_status_bit(SW_Operation_mode_specific0);
+      set_status_bit(SW_Voltage_enabled);
+      set_status_bit(SW_Remote);
       if (target_position != actual_position)
       {
         clear_status_bit(SW_Operation_mode_specific0);
@@ -360,7 +363,7 @@ protected:
       (*this)[0x6064][0] =
         (int32_t)((actual_position + target_velocity * control_cycle_period_d) * 1000.0);
       std::this_thread::sleep_for(
-        std::chrono::milliseconds(((int32_t)control_cycle_period_d * 1000)));
+        std::chrono::milliseconds(((int32_t)(control_cycle_period_d * 1000.0))));
     }
     RCLCPP_INFO(rclcpp::get_logger("cia402_slave"), "Leaving run_profile_velocity_mode");
   }

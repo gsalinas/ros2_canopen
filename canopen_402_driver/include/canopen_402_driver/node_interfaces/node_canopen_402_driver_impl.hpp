@@ -50,13 +50,13 @@ void NodeCanopen402Driver<rclcpp::Node>::init(bool called_from_base)
     std::bind(
       &NodeCanopen402Driver<rclcpp::Node>::handle_init, this, std::placeholders::_1,
       std::placeholders::_2));
-  
+
   handle_enable_service = this->node_->create_service<std_srvs::srv::Trigger>(
     std::string(this->node_->get_name()).append("/enable").c_str(),
     std::bind(
       &NodeCanopen402Driver<rclcpp::Node>::handle_enable, this, std::placeholders::_1,
       std::placeholders::_2));
-  
+
   handle_disable_service = this->node_->create_service<std_srvs::srv::Trigger>(
     std::string(this->node_->get_name()).append("/disable").c_str(),
     std::bind(
@@ -111,6 +111,12 @@ void NodeCanopen402Driver<rclcpp::Node>::init(bool called_from_base)
     std::bind(
       &NodeCanopen402Driver<rclcpp::Node>::handle_set_mode_torque, this, std::placeholders::_1,
       std::placeholders::_2));
+
+  handle_set_mode_cyclic_torque_service = this->node_->create_service<std_srvs::srv::Trigger>(
+    std::string(this->node_->get_name()).append("/cyclic_torque_mode").c_str(),
+    std::bind(
+      &NodeCanopen402Driver<rclcpp::Node>::handle_set_mode_cyclic_torque, this,
+      std::placeholders::_1, std::placeholders::_2));
 
   handle_set_target_service = this->node_->create_service<canopen_interfaces::srv::COTargetDouble>(
     std::string(this->node_->get_name()).append("/target").c_str(),
@@ -192,6 +198,12 @@ void NodeCanopen402Driver<rclcpp_lifecycle::LifecycleNode>::init(bool called_fro
       &NodeCanopen402Driver<rclcpp_lifecycle::LifecycleNode>::handle_set_mode_torque, this,
       std::placeholders::_1, std::placeholders::_2));
 
+  handle_set_mode_cyclic_torque_service = this->node_->create_service<std_srvs::srv::Trigger>(
+    std::string(this->node_->get_name()).append("/cyclic_torque_mode").c_str(),
+    std::bind(
+      &NodeCanopen402Driver<rclcpp_lifecycle::LifecycleNode>::handle_set_mode_cyclic_torque, this,
+      std::placeholders::_1, std::placeholders::_2));
+
   handle_set_target_service = this->node_->create_service<canopen_interfaces::srv::COTargetDouble>(
     std::string(this->node_->get_name()).append("/target").c_str(),
     std::bind(
@@ -263,8 +275,10 @@ void NodeCanopen402Driver<rclcpp_lifecycle::LifecycleNode>::configure(bool calle
   homing_timeout_seconds_ = homing_timeout_seconds.value_or(10);
   RCLCPP_INFO(
     this->node_->get_logger(),
-    "scale_pos_to_dev_ %f\nscale_pos_from_dev_ %f\nscale_vel_to_dev_ %f\nscale_vel_from_dev_ %f\nhoming_timeout_seconds_ %i\n",
-    scale_pos_to_dev_, scale_pos_from_dev_, scale_vel_to_dev_, scale_vel_from_dev_, homing_timeout_seconds_);
+    "scale_pos_to_dev_ %f\nscale_pos_from_dev_ %f\nscale_vel_to_dev_ %f\nscale_vel_from_dev_ "
+    "%f\nhoming_timeout_seconds_ %i\n",
+    scale_pos_to_dev_, scale_pos_from_dev_, scale_vel_to_dev_, scale_vel_from_dev_,
+    homing_timeout_seconds_);
 }
 
 template <>
@@ -331,8 +345,10 @@ void NodeCanopen402Driver<rclcpp::Node>::configure(bool called_from_base)
   homing_timeout_seconds_ = homing_timeout_seconds.value_or(10);
   RCLCPP_INFO(
     this->node_->get_logger(),
-    "scale_pos_to_dev_ %f\nscale_pos_from_dev_ %f\nscale_vel_to_dev_ %f\nscale_vel_from_dev_ %f\nhoming_timeout_seconds_ %i\n",
-    scale_pos_to_dev_, scale_pos_from_dev_, scale_vel_to_dev_, scale_vel_from_dev_, homing_timeout_seconds_);
+    "scale_pos_to_dev_ %f\nscale_pos_from_dev_ %f\nscale_vel_to_dev_ %f\nscale_vel_from_dev_ "
+    "%f\nhoming_timeout_seconds_ %i\n",
+    scale_pos_to_dev_, scale_pos_from_dev_, scale_vel_to_dev_, scale_vel_from_dev_,
+    homing_timeout_seconds_);
 }
 
 template <class NODETYPE>
@@ -374,7 +390,8 @@ template <class NODETYPE>
 void NodeCanopen402Driver<NODETYPE>::add_to_master()
 {
   NodeCanopenProxyDriver<NODETYPE>::add_to_master();
-  motor_ = std::make_shared<Motor402>(this->lely_driver_, switching_state_, homing_timeout_seconds_);
+  motor_ =
+    std::make_shared<Motor402>(this->lely_driver_, switching_state_, homing_timeout_seconds_);
 }
 
 template <class NODETYPE>
@@ -456,6 +473,14 @@ void NodeCanopen402Driver<NODETYPE>::handle_set_mode_torque(
 }
 
 template <class NODETYPE>
+void NodeCanopen402Driver<NODETYPE>::handle_set_mode_cyclic_torque(
+  const std_srvs::srv::Trigger::Request::SharedPtr request,
+  std_srvs::srv::Trigger::Response::SharedPtr response)
+{
+  response->success = set_mode_cyclic_torque();
+}
+
+template <class NODETYPE>
 void NodeCanopen402Driver<NODETYPE>::handle_set_target(
   const canopen_interfaces::srv::COTargetDouble::Request::SharedPtr request,
   canopen_interfaces::srv::COTargetDouble::Response::SharedPtr response)
@@ -508,7 +533,6 @@ void NodeCanopen402Driver<NODETYPE>::handle_enable(
     response->success = temp;
   }
 }
-
 
 template <class NODETYPE>
 bool NodeCanopen402Driver<NODETYPE>::init_motor()
@@ -649,6 +673,26 @@ bool NodeCanopen402Driver<NODETYPE>::set_mode_cyclic_velocity()
     if (motor_->getMode() != MotorBase::Cyclic_Synchronous_Velocity)
     {
       return motor_->enterModeAndWait(MotorBase::Cyclic_Synchronous_Velocity);
+    }
+    else
+    {
+      return false;
+    }
+  }
+  else
+  {
+    return false;
+  }
+}
+
+template <class NODETYPE>
+bool NodeCanopen402Driver<NODETYPE>::set_mode_cyclic_torque()
+{
+  if (this->activated_.load())
+  {
+    if (motor_->getMode() != MotorBase::Cyclic_Synchronous_Torque)
+    {
+      return motor_->enterModeAndWait(MotorBase::Cyclic_Synchronous_Torque);
     }
     else
     {
