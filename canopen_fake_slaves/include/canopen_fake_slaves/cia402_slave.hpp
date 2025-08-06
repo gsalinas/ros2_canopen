@@ -800,25 +800,6 @@ protected:
   }
 };
 
-class DelayedBootSlave : public ros2_canopen::CIA402MockSlave
-{
-public:
-  using ros2_canopen::CIA402MockSlave::CIA402MockSlave;
-
-  void DelayedReset()
-  {
-    RCLCPP_WARN(rclcpp::get_logger("cia402_slave"), "Delaying CANopen Boot-Up Frame...");
-    std::thread(
-      [this]()
-      {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        RCLCPP_INFO(rclcpp::get_logger("cia402_slave"), "Now sending Boot-Up frame...");
-        this->canopen::BasicSlave::Reset();
-      })
-      .detach();
-  }
-};
-
 class CIA402Slave : public BaseSlave
 {
 public:
@@ -855,8 +836,8 @@ public:
         ctx.shutdown();
       });
 
-    DelayedBootSlave slave(timer, chan, slave_config_.c_str(), "", node_id_);
-    slave.DelayedReset();
+    ros2_canopen::CIA402MockSlave slave(timer, chan, slave_config_.c_str(), "", node_id_);
+    slave.Reset();
 
     RCLCPP_INFO(this->get_logger(), "Created cia402 slave for node_id %i.", node_id_);
 
