@@ -83,7 +83,7 @@ bool Motor402::switchMode(uint16_t mode)
     selected_mode_.reset();
     try
     {  // try to set mode
-      driver->universal_set_value<int8_t>(op_mode_index, 0x0, mode);
+      driver->universal_set_value<int16_t>(op_mode_index, 0x0, mode);
     }
     catch (...)
     {
@@ -122,7 +122,7 @@ bool Motor402::switchMode(uint16_t mode)
 
   if (!switchState(switching_state_)) return false;
 
-  driver->universal_set_value<int8_t>(op_mode_index, 0x0, mode);
+  driver->universal_set_value<int16_t>(op_mode_index, 0x0, mode);
 
   bool okay = false;
 
@@ -160,7 +160,7 @@ bool Motor402::switchMode(uint16_t mode)
     else
     {
       RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Mode switch timed out.");
-      driver->universal_set_value<int8_t>(op_mode_index, 0x0, mode_id_);
+      driver->universal_set_value<int16_t>(op_mode_index, 0x0, mode_id_);
       if (enable_diagnostics_.load())
       {
         this->diag_collector_->addf("cia402_mode", "Mode switch timed out: %d", mode);
