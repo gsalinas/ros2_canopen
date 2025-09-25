@@ -208,7 +208,7 @@ public:
     this->diag_collector_ = status;
   }
 
-protected: // trying this out instead of private
+private:
   virtual bool isModeSupportedByDevice(uint16_t mode);
   void registerMode(uint16_t id, const ModeSharedPtr & m);
 
