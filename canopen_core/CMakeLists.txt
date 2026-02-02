@@ -28,18 +28,6 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(yaml_cpp_vendor REQUIRED)
 include(ConfigExtras.cmake)
 
-set(dependencies
-  canopen_interfaces
-  lely_core_libraries
-  lifecycle_msgs
-  rclcpp
-  rclcpp_components
-  rclcpp_lifecycle
-  yaml_cpp_vendor
-  Boost
-)
-
-
 add_library(node_canopen_driver
   SHARED
   src/node_interfaces/node_canopen_driver.cpp
@@ -169,7 +157,14 @@ ament_export_targets(
 )
 
 ament_export_dependencies(
-  ${dependencies}
+  Boost
+  canopen_interfaces
+  lely_core_libraries
+  lifecycle_msgs
+  rclcpp
+  rclcpp_components
+  rclcpp_lifecycle
+  yaml_cpp_vendor
 )
 
 # https://github.com/ament/ament_cmake/blob/e78ed7e084489c2a48cb91dec9da92c13e9653c9/ament_cmake_core/cmake/core/ament_package.cmake#L24-L32

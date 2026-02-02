@@ -23,13 +23,6 @@ target_include_directories(motion_generator  PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 
-set(dependencies
-  lely_core_libraries
-  lifecycle_msgs
-  rclcpp
-  rclcpp_lifecycle
-)
-
 add_executable(
   basic_slave_node
   "src/basic_slave.cpp"
@@ -62,13 +55,9 @@ target_include_directories(cia402_slave_node  PUBLIC
 target_link_libraries(cia402_slave_node PUBLIC
   ${lely_core_libraries_LIBRARIES}
   ${lifecycle_msgs_TARGETS}
+  motion_generator
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
-)
-
-target_link_libraries(
-  cia402_slave_node
-  motion_generator
 )
 
 install(TARGETS motion_generator
@@ -112,7 +101,10 @@ ament_export_include_directories(
 )
 
 ament_export_dependencies(
-  ${dependencies}
+  lely_core_libraries
+  lifecycle_msgs
+  rclcpp
+  rclcpp_lifecycle
 )
 
 ament_package()

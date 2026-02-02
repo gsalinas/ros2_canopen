@@ -17,20 +17,6 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 
-set(dependencies
-  canopen_base_driver
-  canopen_core
-  canopen_interfaces
-  rclcpp
-  rclcpp_components
-  rclcpp_lifecycle
-  std_msgs
-  std_srvs
-)
-
-
-
-
 add_library(node_canopen_proxy_driver
   src/node_interfaces/node_canopen_proxy_driver.cpp
 )
@@ -120,7 +106,14 @@ ament_export_targets(
   export_${PROJECT_NAME}
 )
 ament_export_dependencies(
-  ${dependencies}
+  canopen_base_driver
+  canopen_core
+  canopen_interfaces
+  rclcpp
+  rclcpp_components
+  rclcpp_lifecycle
+  std_msgs
+  std_srvs
 )
 
 ament_package()

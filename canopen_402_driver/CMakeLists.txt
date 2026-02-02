@@ -18,18 +18,6 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 
-set(dependencies
-  canopen_base_driver
-  canopen_core
-  canopen_interfaces
-  canopen_proxy_driver
-  rclcpp
-  rclcpp_lifecycle
-  rclcpp_components
-  sensor_msgs
-  std_srvs
-)
-
 add_library(lely_motion_controller_bridge
   src/motor.cpp
   src/command.cpp
@@ -140,7 +128,15 @@ ament_export_targets(
   export_${PROJECT_NAME}
 )
 ament_export_dependencies(
-  ${dependencies}
+  canopen_base_driver
+  canopen_core
+  canopen_interfaces
+  canopen_proxy_driver
+  rclcpp
+  rclcpp_components
+  rclcpp_lifecycle
+  sensor_msgs
+  std_srvs
 )
 
 ament_package()

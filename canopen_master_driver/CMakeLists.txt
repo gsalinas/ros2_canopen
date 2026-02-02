@@ -15,15 +15,6 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 
-set(dependencies
-  canopen_core
-  canopen_interfaces
-  lely_core_libraries
-  rclcpp
-  rclcpp_components
-  rclcpp_lifecycle
-)
-
 add_library(lely_master_bridge
   src/lely_master_bridge.cpp
 )
@@ -135,7 +126,12 @@ ament_export_targets(
 )
 
 ament_export_dependencies(
-  ${dependencies}
+  canopen_core
+  canopen_interfaces
+  lely_core_libraries
+  rclcpp
+  rclcpp_components
+  rclcpp_lifecycle
 )
 
 ament_package()

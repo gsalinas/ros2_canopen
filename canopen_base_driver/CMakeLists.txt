@@ -19,19 +19,6 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(diagnostic_updater REQUIRED)
 
-set(dependencies
-  canopen_core
-  canopen_interfaces
-  lely_core_libraries
-  rclcpp
-  rclcpp_components
-  rclcpp_lifecycle
-  std_msgs
-  std_srvs
-  diagnostic_updater
-)
-
-
 add_library(lely_driver_bridge
   src/lely_driver_bridge.cpp
 )
@@ -146,7 +133,15 @@ ament_export_targets(
   export_${PROJECT_NAME}
 )
 ament_export_dependencies(
-  ${dependencies}
+  canopen_core
+  canopen_interfaces
+  diagnostic_updater
+  lely_core_libraries
+  rclcpp
+  rclcpp_components
+  rclcpp_lifecycle
+  std_msgs
+  std_srvs
 )
 
 ament_package()
