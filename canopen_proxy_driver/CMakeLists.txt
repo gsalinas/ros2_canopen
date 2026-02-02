@@ -40,9 +40,21 @@ target_include_directories(node_canopen_proxy_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(
-  node_canopen_proxy_driver
-  ${dependencies}
+target_link_libraries(node_canopen_proxy_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  canopen_base_driver::base_driver
+  canopen_base_driver::lely_driver_bridge
+  canopen_base_driver::lifecycle_base_driver
+  canopen_base_driver::node_canopen_base_driver
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 add_library(lifecycle_proxy_driver
@@ -54,12 +66,22 @@ target_include_directories(lifecycle_proxy_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(lifecycle_proxy_driver
+target_link_libraries(lifecycle_proxy_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  canopen_base_driver::base_driver
+  canopen_base_driver::lely_driver_bridge
+  canopen_base_driver::lifecycle_base_driver
+  canopen_base_driver::node_canopen_base_driver
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
   node_canopen_proxy_driver
-)
-ament_target_dependencies(
-  lifecycle_proxy_driver
-  ${dependencies}
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
@@ -79,13 +101,22 @@ target_compile_options(proxy_driver PUBLIC -Wl,--no-undefined)
 target_include_directories(proxy_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(proxy_driver
+target_link_libraries(proxy_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  canopen_base_driver::base_driver
+  canopen_base_driver::lely_driver_bridge
+  canopen_base_driver::lifecycle_base_driver
+  canopen_base_driver::node_canopen_base_driver
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
   node_canopen_proxy_driver
-)
-
-ament_target_dependencies(
-  proxy_driver
-  ${dependencies}
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 # Causes the visibility macros to use dllexport rather than dllimport,

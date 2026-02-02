@@ -33,9 +33,15 @@ target_include_directories(lely_master_bridge PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(
-  lely_master_bridge
-  ${dependencies}
+target_link_libraries(lely_master_bridge PUBLIC
+  ${canopen_interfaces_TARGETS}
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 
@@ -48,14 +54,16 @@ target_include_directories(node_canopen_basic_master PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(
-  node_canopen_basic_master
+target_link_libraries(node_canopen_basic_master PUBLIC
+  ${canopen_interfaces_TARGETS}
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
   lely_master_bridge
-)
-
-ament_target_dependencies(
-  node_canopen_basic_master
-  ${dependencies}
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 
@@ -68,15 +76,17 @@ target_compile_options(lifecycle_master_driver PUBLIC -Wl,--no-undefined)
 target_include_directories(lifecycle_master_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(
-  lifecycle_master_driver
-  node_canopen_basic_master
+target_link_libraries(lifecycle_master_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
   lely_master_bridge
-)
-
-ament_target_dependencies(
-  lifecycle_master_driver
-  ${dependencies}
+  node_canopen_basic_master
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
@@ -96,15 +106,17 @@ target_compile_options(master_driver PUBLIC -Wl,--no-undefined)
 target_include_directories(master_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(
-  master_driver
-  node_canopen_basic_master
+target_link_libraries(master_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
   lely_master_bridge
-)
-
-ament_target_dependencies(
-  master_driver
-  ${dependencies}
+  node_canopen_basic_master
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 # Causes the visibility macros to use dllexport rather than dllimport,

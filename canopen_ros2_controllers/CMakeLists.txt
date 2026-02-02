@@ -34,7 +34,28 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
 )
-ament_target_dependencies(${PROJECT_NAME} PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS})
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  canopen_402_driver::cia402_driver
+  canopen_402_driver::lely_motion_controller_bridge
+  canopen_402_driver::lifecycle_cia402_driver
+  canopen_402_driver::node_canopen_cia402_driver
+  canopen_proxy_driver::lifecycle_proxy_driver
+  canopen_proxy_driver::node_canopen_proxy_driver
+  canopen_proxy_driver::proxy_driver
+  controller_interface::controller_interface
+  controller_manager::controller_manager
+  controller_manager::controller_manager_parameters
+  hardware_interface::hardware_interface
+  hardware_interface::mock_components
+  pluginlib::pluginlib
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
+  realtime_tools::realtime_tools
+  realtime_tools::thread_priority
+)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "CANOPEN_PROXY_CONTROLLER_BUILDING_DLL" "_USE_MATH_DEFINES")
 pluginlib_export_plugin_description_file(controller_interface canopen_ros2_controllers.xml)

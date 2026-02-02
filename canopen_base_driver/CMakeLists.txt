@@ -8,6 +8,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
+find_package(Boost REQUIRED COMPONENTS thread)
 find_package(canopen_core REQUIRED)
 find_package(canopen_interfaces REQUIRED)
 find_package(lely_core_libraries REQUIRED)
@@ -40,9 +41,18 @@ target_include_directories(lely_driver_bridge PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(
-  lely_driver_bridge
-  ${dependencies}
+target_link_libraries(lely_driver_bridge PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
+  diagnostic_updater::diagnostic_updater
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 
@@ -55,13 +65,20 @@ target_include_directories(node_canopen_base_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(node_canopen_base_driver
+target_link_libraries(node_canopen_base_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  Boost::thread
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
+  diagnostic_updater::diagnostic_updater
   lely_driver_bridge
-)
-
-ament_target_dependencies(
-  node_canopen_base_driver
-  ${dependencies}
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 message(STATUS "node_canopen_base_driver: ${lely_core_libraries_LIBRARIES}")
 
@@ -74,13 +91,20 @@ target_include_directories(lifecycle_base_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(lifecycle_base_driver
-  node_canopen_base_driver
+target_link_libraries(lifecycle_base_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
+  diagnostic_updater::diagnostic_updater
   lely_driver_bridge
-)
-ament_target_dependencies(
-  lifecycle_base_driver
-  ${dependencies}
+  node_canopen_base_driver
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
@@ -100,14 +124,20 @@ target_compile_options(base_driver PUBLIC -Wl,--no-undefined)
 target_include_directories(base_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(base_driver
-  node_canopen_base_driver
+target_link_libraries(base_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  canopen_core::device_container
+  canopen_core::node_canopen_driver
+  canopen_core::node_canopen_master
+  diagnostic_updater::diagnostic_updater
   lely_driver_bridge
-)
-
-ament_target_dependencies(
-  base_driver
-  ${dependencies}
+  node_canopen_base_driver
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 # Causes the visibility macros to use dllexport rather than dllimport,

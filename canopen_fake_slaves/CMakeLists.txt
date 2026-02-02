@@ -38,11 +38,14 @@ add_executable(
 target_compile_features(basic_slave_node  PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 target_include_directories(basic_slave_node  PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+  $<INSTALL_INTERFACE:include>
+  ${lely_core_libraries_INCLUDE_DIRS})
 
-ament_target_dependencies(
-  basic_slave_node
-  ${dependencies}
+target_link_libraries(basic_slave_node PUBLIC
+  ${lely_core_libraries_LIBRARIES}
+  ${lifecycle_msgs_TARGETS}
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 
@@ -53,11 +56,14 @@ add_executable(
 target_compile_features(cia402_slave_node  PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 target_include_directories(cia402_slave_node  PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+  $<INSTALL_INTERFACE:include>
+  ${lely_core_libraries_INCLUDE_DIRS})
 
-ament_target_dependencies(
-  cia402_slave_node
-  ${dependencies}
+target_link_libraries(cia402_slave_node PUBLIC
+  ${lely_core_libraries_LIBRARIES}
+  ${lifecycle_msgs_TARGETS}
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 target_link_libraries(

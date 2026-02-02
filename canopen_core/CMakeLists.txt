@@ -51,14 +51,13 @@ target_compile_options(node_canopen_driver PUBLIC -fPIC -Wl,--no-undefined)
 target_include_directories(node_canopen_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+  ${lely_core_libraries_INCLUDE_DIRS}
 )
-ament_target_dependencies(node_canopen_driver
-  rclcpp
-  rclcpp_lifecycle
-  lely_core_libraries
-  yaml_cpp_vendor
-  canopen_interfaces
-  Boost
+target_link_libraries(node_canopen_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${lely_core_libraries_LIBRARIES}
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 add_library(node_canopen_master
@@ -72,14 +71,13 @@ target_compile_options(node_canopen_master PUBLIC -fPIC -Wl,--no-undefined)
 target_include_directories(node_canopen_master PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+  ${lely_core_libraries_INCLUDE_DIRS}
 )
-ament_target_dependencies(node_canopen_master
-  rclcpp
-  rclcpp_lifecycle
-  lely_core_libraries
-  yaml_cpp_vendor
-  canopen_interfaces
-  Boost
+target_link_libraries(node_canopen_master PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${lely_core_libraries_LIBRARIES}
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 
@@ -96,30 +94,30 @@ target_include_directories(device_container PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
-ament_target_dependencies(device_container
-  rclcpp
-  rclcpp_lifecycle
-  lely_core_libraries
-  yaml_cpp_vendor
-  canopen_interfaces
-  rclcpp_components
-)
-target_link_libraries(device_container
+target_link_libraries(device_container PUBLIC
+  ${canopen_interfaces_TARGETS}
   node_canopen_master
   node_canopen_driver
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
   yaml-cpp
 )
 
 add_executable(device_container_node
   src/device_container_node.cpp
 )
-target_link_libraries(device_container_node
+target_link_libraries(device_container_node PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${lifecycle_msgs_TARGETS}
   device_container
   node_canopen_master
   node_canopen_driver
-)
-ament_target_dependencies(device_container_node
-  ${dependencies}
+  rclcpp::rclcpp
+  rclcpp_components::component
+  rclcpp_components::component_manager
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 target_include_directories(device_container_node PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"

@@ -42,9 +42,9 @@ target_include_directories(lely_motion_controller_bridge PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(
-  lely_motion_controller_bridge
-  ${dependencies}
+target_link_libraries(lely_motion_controller_bridge PUBLIC
+  canopen_base_driver::lely_driver_bridge
+  rclcpp::rclcpp
 )
 
 
@@ -56,13 +56,11 @@ target_compile_options(node_canopen_cia402_driver PUBLIC -Wl,--no-undefined)
 target_include_directories(node_canopen_cia402_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(node_canopen_cia402_driver
+target_link_libraries(node_canopen_cia402_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${sensor_msgs_TARGETS}
+  canopen_proxy_driver::node_canopen_proxy_driver
   lely_motion_controller_bridge
-)
-ament_target_dependencies(
-  node_canopen_cia402_driver
-  ${dependencies}
-
 )
 
 add_library(lifecycle_cia402_driver
@@ -74,13 +72,10 @@ target_include_directories(lifecycle_cia402_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(lifecycle_cia402_driver
+target_link_libraries(lifecycle_cia402_driver PUBLIC
+  canopen_core::lifecycle_driver_node
   node_canopen_cia402_driver
-  lely_motion_controller_bridge
-)
-ament_target_dependencies(
-  lifecycle_cia402_driver
-  ${dependencies}
+  rclcpp_components::component
 )
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
@@ -100,14 +95,10 @@ target_compile_options(cia402_driver PUBLIC -Wl,--no-undefined)
 target_include_directories(cia402_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_link_libraries(cia402_driver
+target_link_libraries(cia402_driver PUBLIC
+  canopen_core::driver_node
   node_canopen_cia402_driver
-  lely_motion_controller_bridge
-)
-
-ament_target_dependencies(
-  cia402_driver
-  ${dependencies}
+  rclcpp_components::component
 )
 
 # Causes the visibility macros to use dllexport rather than dllimport,
