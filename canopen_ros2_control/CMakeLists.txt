@@ -5,25 +5,17 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     # add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
-set(THIS_PACKAGE_INCLUDE_DEPENDS
-  canopen_402_driver
-  canopen_core
-  canopen_proxy_driver
-  hardware_interface
-  pluginlib
-  rclcpp
-  rclcpp_components
-  rclcpp_lifecycle
-)
-
-find_package(ros2_control_test_assets)
-find_package(ament_cmake_gmock REQUIRED)
-
 find_package(ament_cmake REQUIRED)
-foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
-  find_package(${Dependency} REQUIRED)
-endforeach()
+find_package(ament_cmake_gmock REQUIRED)
+find_package(canopen_402_driver REQUIRED)
+find_package(canopen_core REQUIRED)
+find_package(canopen_proxy_driver REQUIRED)
+find_package(hardware_interface REQUIRED)
+find_package(pluginlib REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(ros2_control_test_assets)
 
 add_library(
   canopen_ros2_control
@@ -83,8 +75,7 @@ if(BUILD_TESTING)
 
   #ament_add_gmock(test_canopen_system test/test_canopen_system.cpp)
   #target_include_directories(test_canopen_system PRIVATE include)
-  #ament_target_dependencies(
-    #test_canopen_system ${THIS_PACKAGE_INCLUDE_DEPENDS} ros2_control_test_assets)
+  #target_link_libraries(test_canopen_system ...
 endif()
 
 ament_export_include_directories(
@@ -94,7 +85,14 @@ ament_export_libraries(
   canopen_ros2_control
 )
 ament_export_dependencies(
-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+  canopen_402_driver
+  canopen_core
+  canopen_proxy_driver
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_components
+  rclcpp_lifecycle
 )
 
 ament_package()

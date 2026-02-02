@@ -84,8 +84,8 @@ target_include_directories(device_container PUBLIC
 )
 target_link_libraries(device_container PUBLIC
   ${canopen_interfaces_TARGETS}
-  node_canopen_master
   node_canopen_driver
+  node_canopen_master
   rclcpp::rclcpp
   rclcpp_components::component
   rclcpp_components::component_manager
@@ -100,8 +100,8 @@ target_link_libraries(device_container_node PUBLIC
   ${canopen_interfaces_TARGETS}
   ${lifecycle_msgs_TARGETS}
   device_container
-  node_canopen_master
   node_canopen_driver
+  node_canopen_master
   rclcpp::rclcpp
   rclcpp_components::component
   rclcpp_components::component_manager

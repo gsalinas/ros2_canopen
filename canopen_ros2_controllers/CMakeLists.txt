@@ -1,26 +1,19 @@
 cmake_minimum_required(VERSION 3.8)
 project(canopen_ros2_controllers)
 
-# find dependencies
-set(THIS_PACKAGE_INCLUDE_DEPENDS
-  canopen_402_driver
-  canopen_interfaces
-  canopen_proxy_driver
-  controller_interface
-  controller_manager
-  hardware_interface
-  pluginlib
-  rclcpp
-  rclcpp_lifecycle
-  realtime_tools
-  std_msgs
-  std_srvs
-)
-
 find_package(ament_cmake REQUIRED)
-foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
-  find_package(${Dependency} REQUIRED)
-endforeach()
+find_package(canopen_402_driver REQUIRED)
+find_package(canopen_interfaces REQUIRED)
+find_package(canopen_proxy_driver REQUIRED)
+find_package(controller_interface REQUIRED)
+find_package(controller_manager REQUIRED)
+find_package(hardware_interface REQUIRED)
+find_package(pluginlib REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(realtime_tools REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 
 add_library(
   ${PROJECT_NAME}
@@ -79,40 +72,19 @@ if(FALSE)
 
 #   ament_add_gmock(test_load_canopen_proxy_controller test/test_load_canopen_proxy_controller.cpp)
 #   target_include_directories(test_load_canopen_proxy_controller PRIVATE include)
-#   ament_target_dependencies(
-#     test_load_canopen_proxy_controller
-#     controller_manager
-#     hardware_interface
-#     canopen_interfaces
-#   )
+#   target_link_libraries(test_load_canopen_proxy_controller ...
 
 #   ament_add_gmock(test_load_cia402_device_controller test/test_load_cia402_device_controller.cpp)
 #   target_include_directories(test_load_cia402_device_controller PRIVATE include)
-#   ament_target_dependencies(
-#     test_load_cia402_device_controller
-#     controller_manager
-#     hardware_interface
-#     canopen_interfaces
-#   )
+#   target_link_libraries(test_load_cia402_device_controller ...
 
 #   ament_add_gmock(test_load_cia402_robot_controller test/test_load_cia402_robot_controller.cpp)
 #   target_include_directories(test_load_cia402_robot_controller PRIVATE include)
-#   ament_target_dependencies(
-#     test_load_cia402_robot_controller
-#     controller_manager
-#     hardware_interface
-#     canopen_interfaces
-#   )
+#   target_link_libraries(test_load_cia402_robot_controller ...
 
-#  ament_add_gmock(test_canopen_proxy_controller test/test_canopen_proxy_controller.cpp)
+#   ament_add_gmock(test_canopen_proxy_controller test/test_canopen_proxy_controller.cpp)
 #   target_include_directories(test_canopen_proxy_controller PRIVATE include)
-#   target_link_libraries(test_canopen_proxy_controller ${PROJECT_NAME})
-#   ament_target_dependencies(
-#     test_canopen_proxy_controller
-#     controller_interface
-#     hardware_interface
-#     canopen_interfaces
-#  )
+#   target_link_libraries(test_canopen_proxy_controller ...
 endif()
 
 ament_export_include_directories(
@@ -122,7 +94,18 @@ ament_export_libraries(
   ${PROJECT_NAME}
 )
 ament_export_dependencies(
-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+  canopen_402_driver
+  canopen_interfaces
+  canopen_proxy_driver
+  controller_interface
+  controller_manager
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_lifecycle
+  realtime_tools
+  std_msgs
+  std_srvs
 )
 
 ament_package()

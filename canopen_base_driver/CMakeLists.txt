@@ -11,13 +11,13 @@ find_package(ament_cmake_ros REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread)
 find_package(canopen_core REQUIRED)
 find_package(canopen_interfaces REQUIRED)
+find_package(diagnostic_updater REQUIRED)
 find_package(lely_core_libraries REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
-find_package(diagnostic_updater REQUIRED)
 
 add_library(lely_driver_bridge
   src/lely_driver_bridge.cpp
