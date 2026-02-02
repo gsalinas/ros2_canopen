@@ -7,7 +7,6 @@ target_include_directories(test_driver_component PUBLIC
 target_link_libraries(test_driver_component
   ${canopen_interfaces_TARGETS}
   ${sensor_msgs_TARGETS}
-  ${std_srvs_TARGETS}
   canopen_base_driver::base_driver
   canopen_base_driver::lely_driver_bridge
   canopen_base_driver::lifecycle_base_driver

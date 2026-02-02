@@ -68,7 +68,7 @@ install(
 )
 
 if(FALSE)
-  find_package(ament_cmake_gmock REQUIRED)
+  # find_package(ament_cmake_gmock REQUIRED)
 
 #   ament_add_gmock(test_load_canopen_proxy_controller test/test_load_canopen_proxy_controller.cpp)
 #   target_include_directories(test_load_canopen_proxy_controller PRIVATE include)

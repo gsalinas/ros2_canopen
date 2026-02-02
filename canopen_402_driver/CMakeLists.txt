@@ -16,7 +16,6 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(std_srvs REQUIRED)
 
 add_library(lely_motion_controller_bridge
   src/motor.cpp
@@ -136,7 +135,6 @@ ament_export_dependencies(
   rclcpp_components
   rclcpp_lifecycle
   sensor_msgs
-  std_srvs
 )
 
 ament_package()

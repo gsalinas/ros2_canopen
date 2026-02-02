@@ -14,8 +14,6 @@ find_package(canopen_interfaces REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(std_srvs REQUIRED)
 
 add_library(node_canopen_proxy_driver
   src/node_interfaces/node_canopen_proxy_driver.cpp
@@ -112,8 +110,6 @@ ament_export_dependencies(
   rclcpp
   rclcpp_components
   rclcpp_lifecycle
-  std_msgs
-  std_srvs
 )
 
 ament_package()

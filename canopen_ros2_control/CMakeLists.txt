@@ -6,7 +6,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
-find_package(ament_cmake_gmock REQUIRED)
 find_package(canopen_402_driver REQUIRED)
 find_package(canopen_core REQUIRED)
 find_package(canopen_proxy_driver REQUIRED)
