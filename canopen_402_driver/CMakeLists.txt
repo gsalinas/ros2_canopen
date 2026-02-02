@@ -43,7 +43,7 @@ target_include_directories(lely_motion_controller_bridge PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(lely_motion_controller_bridge PUBLIC
-  canopen_base_driver::lely_driver_bridge
+  canopen_base_driver::node_canopen_base_driver
   rclcpp::rclcpp
 )
 
@@ -73,9 +73,10 @@ target_include_directories(lifecycle_cia402_driver PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(lifecycle_cia402_driver PUBLIC
-  canopen_core::lifecycle_driver_node
+  canopen_core::node_canopen_driver
   node_canopen_cia402_driver
   rclcpp_components::component
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
@@ -96,7 +97,7 @@ target_include_directories(cia402_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 target_link_libraries(cia402_driver PUBLIC
-  canopen_core::driver_node
+  canopen_core::node_canopen_driver
   node_canopen_cia402_driver
   rclcpp_components::component
 )
