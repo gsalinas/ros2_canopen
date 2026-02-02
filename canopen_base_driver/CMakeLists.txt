@@ -27,8 +27,8 @@ target_compile_options(lely_driver_bridge PUBLIC -Wl,--no-undefined)
 target_include_directories(lely_driver_bridge PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${lely_core_libraries_INCLUDE_DIRS})
-
+  ${lely_core_libraries_INCLUDE_DIRS}
+)
 target_link_libraries(lely_driver_bridge PUBLIC
   ${lely_core_libraries_LIBRARIES}
   canopen_core::node_canopen_driver
@@ -44,7 +44,6 @@ target_compile_options(node_canopen_base_driver PUBLIC -Wl,--no-undefined)
 target_include_directories(node_canopen_base_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-
 target_link_libraries(node_canopen_base_driver PUBLIC
   ${canopen_interfaces_TARGETS}
   ${std_msgs_TARGETS}
@@ -64,7 +63,6 @@ target_compile_options(lifecycle_base_driver PUBLIC -Wl,--no-undefined)
 target_include_directories(lifecycle_base_driver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-
 target_link_libraries(lifecycle_base_driver PUBLIC
   canopen_core::node_canopen_driver
   node_canopen_base_driver

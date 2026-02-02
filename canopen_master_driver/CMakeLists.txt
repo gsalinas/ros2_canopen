@@ -23,8 +23,8 @@ target_compile_options(lely_master_bridge PUBLIC -Wl,--no-undefined)
 target_include_directories(lely_master_bridge PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${lely_core_libraries_INCLUDE_DIRS})
-
+  ${lely_core_libraries_INCLUDE_DIRS}
+)
 target_link_libraries(lely_master_bridge PUBLIC
   ${lely_core_libraries_LIBRARIES}
   canopen_core::node_canopen_master

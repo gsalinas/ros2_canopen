@@ -222,7 +222,7 @@ The CMakeLists.txt file should look like this:
    $<INSTALL_INTERFACE:include>)
 
    target_link_libraries(node_canopen_xxx_driver PUBLIC
-      canopen_proxy_driver::node_canopen_proxy_driver
+     canopen_proxy_driver::node_canopen_proxy_driver
    )
 
    # Lifecycle driver
@@ -236,10 +236,10 @@ The CMakeLists.txt file should look like this:
    $<INSTALL_INTERFACE:include>)
 
    target_link_libraries(lifecycle_xxx_driver PUBLIC
-      canopen_core::node_canopen_driver
-      node_canopen_xxx_driver
-      rclcpp_components::component
-      rclcpp_lifecycle::rclcpp_lifecycle
+     canopen_core::node_canopen_driver
+     node_canopen_xxx_driver
+     rclcpp_components::component
+     rclcpp_lifecycle::rclcpp_lifecycle
    )
    # Causes the visibility macros to use dllexport rather than dllimport,
    # which is appropriate when building the dll but not consuming it.
@@ -260,9 +260,9 @@ The CMakeLists.txt file should look like this:
    $<INSTALL_INTERFACE:include>)
 
    target_link_libraries(xxx_driver PUBLIC
-      canopen_core::node_canopen_driver
-      node_canopen_xxx_driver
-      rclcpp_components::component
+     canopen_core::node_canopen_driver
+     node_canopen_xxx_driver
+     rclcpp_components::component
    )
 
    # Causes the visibility macros to use dllexport rather than dllimport,
@@ -300,15 +300,15 @@ The CMakeLists.txt file should look like this:
    export_${PROJECT_NAME}
    )
    ament_export_dependencies(
-   canopen_base_driver
-   canopen_core
-   canopen_interfaces
-   canopen_proxy_driver
-   rclcpp
-   rclcpp_components
-   rclcpp_lifecycle
-   std_msgs
-   std_srvs
+     canopen_base_driver
+     canopen_core
+     canopen_interfaces
+     canopen_proxy_driver
+     rclcpp
+     rclcpp_components
+     rclcpp_lifecycle
+     std_msgs
+     std_srvs
    )
 
    ament_package()

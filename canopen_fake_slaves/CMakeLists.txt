@@ -32,8 +32,8 @@ target_compile_features(basic_slave_node  PUBLIC c_std_99 cxx_std_17)  # Require
 target_include_directories(basic_slave_node  PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${lely_core_libraries_INCLUDE_DIRS})
-
+  ${lely_core_libraries_INCLUDE_DIRS}
+)
 target_link_libraries(basic_slave_node PUBLIC
   ${lely_core_libraries_LIBRARIES}
   ${lifecycle_msgs_TARGETS}
@@ -50,8 +50,8 @@ target_compile_features(cia402_slave_node  PUBLIC c_std_99 cxx_std_17)  # Requir
 target_include_directories(cia402_slave_node  PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${lely_core_libraries_INCLUDE_DIRS})
-
+  ${lely_core_libraries_INCLUDE_DIRS}
+)
 target_link_libraries(cia402_slave_node PUBLIC
   ${lely_core_libraries_LIBRARIES}
   ${lifecycle_msgs_TARGETS}
