@@ -46,6 +46,7 @@ target_link_libraries(node_canopen_driver PUBLIC
   ${lely_core_libraries_LIBRARIES}
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
+  yaml-cpp
 )
 
 add_library(node_canopen_master
@@ -66,6 +67,7 @@ target_link_libraries(node_canopen_master PUBLIC
   ${lely_core_libraries_LIBRARIES}
   rclcpp::rclcpp
   rclcpp_lifecycle::rclcpp_lifecycle
+  yaml-cpp
 )
 
 
