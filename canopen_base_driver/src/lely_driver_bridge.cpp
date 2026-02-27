@@ -137,7 +137,7 @@ void LelyDriverBridge::OnRpdoWrite(uint16_t idx, uint8_t subidx) noexcept
     return;
   }
   uint8_t co_def = (uint8_t)sub->getType();
-  uint32_t data = 0;
+  uint64_t data = 0;
   switch (co_def)
   {
     case CO_DEFTYPE_BOOLEAN:
@@ -187,6 +187,20 @@ void LelyDriverBridge::OnRpdoWrite(uint16_t idx, uint8_t subidx) noexcept
       std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
       sub->setVal<CO_DEFTYPE_INTEGER32>((int32_t)rpdo_mapped[idx][subidx]);
       std::memcpy(&data, &sub->getVal<CO_DEFTYPE_INTEGER32>(), 4);
+      break;
+    }
+    case CO_DEFTYPE_UNSIGNED64:
+    {
+        std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
+        sub->setVal<CO_DEFTYPE_UNSIGNED64>((int64_t)rpdo_mapped[idx][subidx]);
+        std::memcpy(&data, &sub->getVal<CO_DEFTYPE_UNSIGNED64>(), 8);
+        break;
+    }
+    case CO_DEFTYPE_INTEGER64:
+    {
+      std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
+      sub->setVal<CO_DEFTYPE_INTEGER32>((int64_t)rpdo_mapped[idx][subidx]);
+      std::memcpy(&data, &sub->getVal<CO_DEFTYPE_INTEGER64>(), 8);
       break;
     }
     default:
@@ -271,6 +285,16 @@ std::future<bool> LelyDriverBridge::async_sdo_write(COData data)
         this->submit_write<int32_t>(data);
         break;
       }
+      case CO_DEFTYPE_UNSIGNED64:
+      {
+        this->submit_write<uint64_t>(data);
+        break;
+      }
+      case CO_DEFTYPE_INTEGER64:
+      {
+        this->submit_write<int64_t>(data);
+        break;
+      }
       default:
         std::cerr << "Unsupported CO_DEFTYPE: " << std::hex << (unsigned int)co_def << std::endl;
         break;
@@ -346,7 +370,15 @@ std::future<COData> LelyDriverBridge::async_sdo_read(COData data)
     {
       this->submit_read<int32_t>(data);
     }
-  }
+    if (co_def == CO_DEFTYPE_UNSIGNED64)
+    {
+      this->submit_read<uint64_t>(data);
+    }
+    if (co_def == CO_DEFTYPE_INTEGER64)
+    {
+      this->submit_read<int64_t>(data);
+    }
+   }
   catch (lely::canopen::SdoError & e)
   {
     this->sdo_read_data_promise->set_exception(lely::canopen::make_sdo_exception_ptr(
@@ -445,6 +477,24 @@ void LelyDriverBridge::tpdo_transmit(COData data)
         tpdo_mapped[data.index_][data.subindex_] = val;
         std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
         sub->setVal<CO_DEFTYPE_INTEGER32>(val);
+        break;
+      }
+      case CO_DEFTYPE_UNSIGNED64:
+      {
+        uint64_t val;
+        std::memcpy(&val, &data.data_, sizeof(uint64_t));
+        tpdo_mapped[data.index_][data.subindex_] = val;
+        std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
+        sub->setVal<CO_DEFTYPE_UNSIGNED64>(val);
+        break;
+      }
+      case CO_DEFTYPE_INTEGER64:
+      {
+        int64_t val;
+        std::memcpy(&val, &data.data_, sizeof(int64_t));
+        tpdo_mapped[data.index_][data.subindex_] = val;
+        std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
+        sub->setVal<CO_DEFTYPE_INTEGER64>(val);
         break;
       }
       default:

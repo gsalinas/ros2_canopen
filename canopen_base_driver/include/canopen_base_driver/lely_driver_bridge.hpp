@@ -825,6 +825,15 @@ public:
     {
       value = this->dictionary_->getVal<CO_DEFTYPE_INTEGER32>(index, subindex);
     }
+    if (typeid(T) == typeid(uint64_t))
+    {
+      value = this->dictionary_->getVal<CO_DEFTYPE_UNSIGNED64>(index, subindex);
+    }
+    if (typeid(T) == typeid(int64_t))
+    {
+      value = this->dictionary_->getVal<CO_DEFTYPE_INTEGER64>(index, subindex);
+    }
+
 
     return value;
   }
