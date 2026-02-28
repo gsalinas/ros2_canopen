@@ -189,6 +189,20 @@ void LelyDriverBridge::OnRpdoWrite(uint16_t idx, uint8_t subidx) noexcept
       std::memcpy(&data, &sub->getVal<CO_DEFTYPE_INTEGER32>(), 4);
       break;
     }
+    case CO_DEFTYPE_UNSIGNED48:
+    {
+      std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
+      sub->setVal<CO_DEFTYPE_UNSIGNED48>((uint64_t)rpdo_mapped[idx][subidx]);
+      std::memcpy(&data, &sub->getVal<CO_DEFTYPE_UNSIGNED48>(), 6);
+      break;
+    }
+    case CO_DEFTYPE_INTEGER48:
+    {
+      std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
+      sub->setVal<CO_DEFTYPE_INTEGER48>((int64_t)rpdo_mapped[idx][subidx]);
+      std::memcpy(&data, &sub->getVal<CO_DEFTYPE_INTEGER48>(), 6);
+      break;
+    }
     case CO_DEFTYPE_UNSIGNED64:
     {
         std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
@@ -285,6 +299,16 @@ std::future<bool> LelyDriverBridge::async_sdo_write(COData data)
         this->submit_write<int32_t>(data);
         break;
       }
+      case CO_DEFTYPE_UNSIGNED48:
+      {
+        this->submit_write<lely::canopen::uint48_t>(data);
+        break;
+      }
+      case CO_DEFTYPE_INTEGER48:
+      {
+        this->submit_write<lely::canopen::int48_t>(data);
+        break;
+      }
       case CO_DEFTYPE_UNSIGNED64:
       {
         this->submit_write<uint64_t>(data);
@@ -369,6 +393,14 @@ std::future<COData> LelyDriverBridge::async_sdo_read(COData data)
     if (co_def == CO_DEFTYPE_INTEGER32)
     {
       this->submit_read<int32_t>(data);
+    }
+    if (co_def == CO_DEFTYPE_UNSIGNED48)
+    {
+      this->submit_read<lely::canopen::uint48_t>(data);
+    }
+    if (co_def == CO_DEFTYPE_INTEGER48)
+    {
+      this->submit_read<lely::canopen::int48_t>(data);
     }
     if (co_def == CO_DEFTYPE_UNSIGNED64)
     {
@@ -477,6 +509,24 @@ void LelyDriverBridge::tpdo_transmit(COData data)
         tpdo_mapped[data.index_][data.subindex_] = val;
         std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
         sub->setVal<CO_DEFTYPE_INTEGER32>(val);
+        break;
+      }
+      case CO_DEFTYPE_UNSIGNED48:
+      {
+        uint64_t val;
+        std::memcpy(&val, &data.data_, 6);
+        tpdo_mapped[data.index_][data.subindex_] = val;
+        std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
+        sub->setVal<CO_DEFTYPE_UNSIGNED48>(val);
+        break;
+      }
+      case CO_DEFTYPE_INTEGER48:
+      {
+        uint64_t val;
+        std::memcpy(&val, &data.data_, 6);
+        tpdo_mapped[data.index_][data.subindex_] = val;
+        std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
+        sub->setVal<CO_DEFTYPE_INTEGER48>(val);
         break;
       }
       case CO_DEFTYPE_UNSIGNED64:

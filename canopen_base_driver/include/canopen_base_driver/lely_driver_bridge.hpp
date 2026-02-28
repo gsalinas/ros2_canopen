@@ -726,8 +726,8 @@ public:
   template <typename T>
   void submit_write(COData data)
   {
-    T value = 0;
-    std::memcpy(&value, &data.data_, sizeof(value));
+    T value(0);
+    std::memcpy((uint8_t*)&value, &data.data_, sizeof(value));
 
     this->SubmitWrite(
       data.index_, data.subindex_, value,
@@ -741,7 +741,8 @@ public:
         else
         {
           std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
-          this->dictionary_->setVal<T>(idx, subidx, value);
+          size_t n = lely::canopen::canopen_traits<T>::size(value);
+          this->dictionary_->setVal(idx, subidx, &value, n);
           this->sdo_write_data_promise->set_value(true);
         }
         std::unique_lock<std::mutex> lck(this->sdo_mutex);
@@ -766,7 +767,8 @@ public:
         else
         {
           std::scoped_lock<std::mutex> lck(this->dictionary_mutex_);
-          this->dictionary_->setVal<T>(idx, subidx, value);
+          size_t n = lely::canopen::canopen_traits<T>::size(value);
+          this->dictionary_->setVal(idx, subidx, &value, n);
           COData d = {idx, subidx, 0};
           std::memcpy(&d.data_, &value, sizeof(T));
           this->sdo_read_data_promise->set_value(d);
@@ -813,6 +815,10 @@ public:
     {
       value = this->dictionary_->getVal<CO_DEFTYPE_UNSIGNED32>(index, subindex);
     }
+    if (typeid(T) == typeid(lely::canopen::uint48_t))
+    {
+      value = this->dictionary_->getVal<CO_DEFTYPE_UNSIGNED48>(index, subindex);
+    }
     if (typeid(T) == typeid(int8_t))
     {
       value = this->dictionary_->getVal<CO_DEFTYPE_INTEGER8>(index, subindex);
@@ -824,6 +830,10 @@ public:
     if (typeid(T) == typeid(int32_t))
     {
       value = this->dictionary_->getVal<CO_DEFTYPE_INTEGER32>(index, subindex);
+    }
+    if (typeid(T) == typeid(lely::canopen::int48_t))
+    {
+      value = this->dictionary_->getVal<CO_DEFTYPE_INTEGER48>(index, subindex);
     }
     if (typeid(T) == typeid(uint64_t))
     {

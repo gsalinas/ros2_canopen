@@ -43,6 +43,9 @@ std::future<bool> LelyMasterBridge::async_write_sdo(uint8_t id, COData data, uin
       case CO_DEFTYPE_INTEGER32:
         submit_write_sdo<int32_t>(id, data.index_, data.subindex_, data.data_);
         break;
+      case CO_DEFTYPE_INTEGER48:
+        submit_write_sdo<lely::canopen::int48_t>(id, data.index_, data.subindex_, lely::canopen::int48_t(data.data_));
+        break;
       case CO_DEFTYPE_INTEGER64:
         submit_write_sdo<int64_t>(id, data.index_, data.subindex_, data.data_);
         break;
@@ -54,6 +57,9 @@ std::future<bool> LelyMasterBridge::async_write_sdo(uint8_t id, COData data, uin
         break;
       case CO_DEFTYPE_UNSIGNED32:
         submit_write_sdo<uint32_t>(id, data.index_, data.subindex_, data.data_);
+        break;
+      case CO_DEFTYPE_UNSIGNED48:
+        submit_write_sdo<lely::canopen::uint48_t>(id, data.index_, data.subindex_, lely::canopen::uint48_t(data.data_));
         break;
       case CO_DEFTYPE_UNSIGNED64:
         submit_write_sdo<uint64_t>(id, data.index_, data.subindex_, data.data_);
@@ -96,6 +102,9 @@ std::future<COData> LelyMasterBridge::async_read_sdo(uint8_t id, COData data, ui
       case CO_DEFTYPE_INTEGER32:
         submit_read_sdo<int32_t>(id, data.index_, data.subindex_);
         break;
+      case CO_DEFTYPE_INTEGER48:
+        submit_read_sdo<lely::canopen::int48_t>(id, data.index_, data.subindex_);
+        break;
       case CO_DEFTYPE_INTEGER64:
         submit_read_sdo<int64_t>(id, data.index_, data.subindex_);
         break;
@@ -107,6 +116,9 @@ std::future<COData> LelyMasterBridge::async_read_sdo(uint8_t id, COData data, ui
         break;
       case CO_DEFTYPE_UNSIGNED32:
         submit_read_sdo<uint32_t>(id, data.index_, data.subindex_);
+        break;
+      case CO_DEFTYPE_UNSIGNED48:
+        submit_read_sdo<lely::canopen::uint48_t>(id, data.index_, data.subindex_);
         break;
       case CO_DEFTYPE_UNSIGNED64:
         submit_read_sdo<uint64_t>(id, data.index_, data.subindex_);
