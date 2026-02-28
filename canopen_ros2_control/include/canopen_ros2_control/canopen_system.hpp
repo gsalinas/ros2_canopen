@@ -144,6 +144,18 @@ struct RORos2ControlCOData : public Ros2ControlCOData
       std::memcpy(&uint32_data, &original_data.data_, sizeof(uint32_t));
       data = static_cast<double>(uint32_data);
     }
+    else if (co_type == "int48_t")
+    {
+      int64_t int48_data = 0;
+      std::memcpy(&int48_data, &original_data.data_, 6);
+      data = static_cast<double>(int48_data);
+    }
+    else if (co_type == "uint48_t")
+    {
+      uint64_t uint48_data;
+      std::memcpy(&uint48_data, &original_data.data_, 6);
+      data = static_cast<double>(uint48_data);
+    }
     else if (co_type == "int64_t")
     {
       int64_t int64_data;
