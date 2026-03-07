@@ -75,12 +75,14 @@ bool DefaultHomingMode::executeHoming()
 
   execute_ = true;
 
-  // ensure start
-  if (!cond_.wait_until(
-        lock, prepare_time,
-        masked_status_not_equal<MASK_Error | MASK_Attained | MASK_Reached, MASK_Reached>(status_)))
-  {
-    return error("homing did not start");
+  if(hmode != 35) { // mode 35 does not move, just copies offset to position
+      // ensure start
+      if (!cond_.wait_until(
+                  lock, prepare_time,
+                  masked_status_not_equal<MASK_Error | MASK_Attained | MASK_Reached, MASK_Reached>(status_)))
+      {
+          return error("homing did not start");
+      }
   }
   if (status_ & MASK_Error)
   {

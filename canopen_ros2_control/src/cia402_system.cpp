@@ -60,7 +60,7 @@ void Cia402System::initDeviceContainer()
   RCLCPP_INFO(kLogger, "Number of registered drivers: '%lu'", device_container_->count_drivers());
   for (auto it = drivers.begin(); it != drivers.end(); it++)
   {
-    auto driver = std::static_pointer_cast<ros2_canopen::Cia402Driver>(it->second);
+    auto driver = std::static_pointer_cast<ros2_canopen::Cia402DriverInterface>(it->second);
 
     auto nmt_state_cb = [&](canopen::NmtState nmt_state, uint8_t id)
     { canopen_data_[id].nmt_state.set_state(nmt_state); };
@@ -252,7 +252,7 @@ hardware_interface::return_type Cia402System::read(
   for (auto it = canopen_data_.begin(); it != canopen_data_.end(); ++it)
   {
     auto motion_controller_driver =
-      std::static_pointer_cast<ros2_canopen::Cia402Driver>(drivers[it->first]);
+      std::static_pointer_cast<ros2_canopen::Cia402DriverInterface>(drivers[it->first]);
     // get position
     motor_data_[it->first].actual_position = motion_controller_driver->get_position();
     // get speed
@@ -273,7 +273,7 @@ hardware_interface::return_type Cia402System::write(
   {
     // TODO(livanov93): check casting
     auto motion_controller_driver =
-      std::static_pointer_cast<ros2_canopen::Cia402Driver>(drivers[it->first]);
+      std::static_pointer_cast<ros2_canopen::Cia402DriverInterface>(drivers[it->first]);
     // do same as in proxy system first - handle nmt, tpdo, rpdo
     // reset node nmt
     if (it->second.nmt_state.reset_command())
@@ -332,7 +332,7 @@ hardware_interface::return_type Cia402System::write(
   return hardware_interface::return_type::OK;
 }
 
-void Cia402System::switchModes(uint id, const std::shared_ptr<ros2_canopen::Cia402Driver> & driver)
+void Cia402System::switchModes(uint id, const std::shared_ptr<ros2_canopen::Cia402DriverInterface> & driver)
 {
   if (motor_data_[id].position_mode.is_commanded())
   {
@@ -371,7 +371,7 @@ void Cia402System::switchModes(uint id, const std::shared_ptr<ros2_canopen::Cia4
   }
 }
 
-void Cia402System::handleInit(uint id, const std::shared_ptr<ros2_canopen::Cia402Driver> & driver)
+void Cia402System::handleInit(uint id, const std::shared_ptr<ros2_canopen::Cia402DriverInterface> & driver)
 {
   if (motor_data_[id].init.is_commanded())
   {
@@ -380,7 +380,7 @@ void Cia402System::handleInit(uint id, const std::shared_ptr<ros2_canopen::Cia40
 }
 
 void Cia402System::handleRecover(
-  uint id, const std::shared_ptr<ros2_canopen::Cia402Driver> & driver)
+  uint id, const std::shared_ptr<ros2_canopen::Cia402DriverInterface> & driver)
 {
   if (motor_data_[id].recover.is_commanded())
   {
@@ -388,7 +388,7 @@ void Cia402System::handleRecover(
   }
 }
 
-void Cia402System::handleHalt(uint id, const std::shared_ptr<ros2_canopen::Cia402Driver> & driver)
+void Cia402System::handleHalt(uint id, const std::shared_ptr<ros2_canopen::Cia402DriverInterface> & driver)
 {
   if (motor_data_[id].halt.is_commanded())
   {

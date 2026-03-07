@@ -15,8 +15,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-#ifndef MOTOR_HPP
-#define MOTOR_HPP
+#ifndef MOTOR_AMC_HPP
+#define MOTOR_AMC_HPP
 
 #include <algorithm>
 #include <atomic>
@@ -57,10 +57,10 @@ typedef ModeForwardHelper<
   (1 << Command402::CW_Operation_mode_specific0)>
   InterpolatedPositionMode;
 
-class Motor402 : public MotorBase
+class MotorAMC : public MotorBase
 {
 public:
-  Motor402(
+  MotorAMC(
     std::shared_ptr<LelyDriverBridge> driver, ros2_canopen::State402::InternalState switching_state,
     int homing_timeout_seconds)
   : MotorBase(),

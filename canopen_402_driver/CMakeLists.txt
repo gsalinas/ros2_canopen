@@ -19,6 +19,7 @@ find_package(sensor_msgs REQUIRED)
 
 add_library(lely_motion_controller_bridge
   src/motor.cpp
+  src/motor_amc.cpp
   src/command.cpp
   src/state.cpp
   src/default_homing_mode.cpp
@@ -34,7 +35,7 @@ target_link_libraries(lely_motion_controller_bridge PUBLIC
   rclcpp::rclcpp
 )
 
-
+#### Cia402
 add_library(node_canopen_cia402_driver
   src/node_interfaces/node_canopen_402_driver.cpp
 )
@@ -73,8 +74,6 @@ rclcpp_components_register_nodes(lifecycle_cia402_driver "ros2_canopen::Lifecycl
 set(node_plugins "${node_plugins}ros2_canopen::LifecycleCia402Driver;$<TARGET_FILE:lifecycle_cia402_driver>\n")
 
 
-
-
 add_library(cia402_driver
   src/cia402_driver.cpp
 )
@@ -96,13 +95,74 @@ target_compile_definitions(cia402_driver PRIVATE "CANOPEN_cia402_driver_BUILDING
 rclcpp_components_register_nodes(cia402_driver "ros2_canopen::Cia402Driver")
 set(node_plugins "${node_plugins}ros2_canopen::Cia402Driver;$<TARGET_FILE:cia402_driver>\n")
 
+
+#### AMC
+add_library(node_canopen_amc_driver
+  src/node_interfaces/node_canopen_402_driver.cpp
+)
+target_compile_features(node_canopen_amc_driver PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_options(node_canopen_amc_driver PUBLIC -Wl,--no-undefined)
+target_include_directories(node_canopen_amc_driver PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(node_canopen_amc_driver PUBLIC
+  ${canopen_interfaces_TARGETS}
+  ${sensor_msgs_TARGETS}
+  canopen_proxy_driver::node_canopen_proxy_driver
+  lely_motion_controller_bridge
+)
+
+add_library(lifecycle_amc_driver
+  src/lifecycle_amc_driver.cpp
+)
+target_compile_features(lifecycle_amc_driver PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_options(lifecycle_amc_driver PUBLIC -Wl,--no-undefined)
+target_include_directories(lifecycle_amc_driver PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
+target_link_libraries(lifecycle_amc_driver PUBLIC
+  canopen_core::node_canopen_driver
+  node_canopen_amc_driver
+  rclcpp_components::component
+  rclcpp_lifecycle::rclcpp_lifecycle
+)
+# Causes the visibility macros to use dllexport rather than dllimport,
+# which is appropriate when building the dll but not consuming it.
+target_compile_definitions(lifecycle_amc_driver PRIVATE "CANOPEN_402_DRIVER_BUILDING_LIBRARY")
+
+rclcpp_components_register_nodes(lifecycle_amc_driver "ros2_canopen::LifecycleAMCDriver")
+set(node_plugins "${node_plugins}ros2_canopen::LifecycleAMCDriver;$<TARGET_FILE:lifecycle_amc_driver>\n")
+
+
+add_library(amc_driver
+  src/amc_driver.cpp
+)
+target_compile_features(amc_driver PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_options(amc_driver PUBLIC -Wl,--no-undefined)
+target_include_directories(amc_driver PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_link_libraries(amc_driver PUBLIC
+  canopen_core::node_canopen_driver
+  node_canopen_amc_driver
+  rclcpp_components::component
+)
+
+# Causes the visibility macros to use dllexport rather than dllimport,
+# which is appropriate when building the dll but not consuming it.
+target_compile_definitions(amc_driver PRIVATE "CANOPEN_amc_driver_BUILDING_LIBRARY")
+
+rclcpp_components_register_nodes(amc_driver "ros2_canopen::AMCDriver")
+set(node_plugins "${node_plugins}ros2_canopen::AMCDriver;$<TARGET_FILE:amc_driver>\n")
+
 install(
   DIRECTORY include/
   DESTINATION include
 )
 
 install(
-  TARGETS lifecycle_cia402_driver cia402_driver node_canopen_cia402_driver lely_motion_controller_bridge
+  TARGETS lifecycle_cia402_driver cia402_driver node_canopen_cia402_driver lifecycle_amc_driver amc_driver node_canopen_amc_driver lely_motion_controller_bridge
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -121,6 +181,9 @@ ament_export_libraries(
   lifecycle_cia402_driver
   cia402_driver
   node_canopen_cia402_driver
+  lifecycle_amc_driver
+  amc_driver
+  node_canopen_amc_driver
   lely_motion_controller_bridge
 )
 ament_export_targets(

@@ -17,7 +17,7 @@
 #ifndef CANOPEN_402_DRIVER__402_DRIVER_HPP_
 #define CANOPEN_402_DRIVER__402_DRIVER_HPP_
 #include "canopen_402_driver/node_interfaces/node_canopen_402_driver.hpp"
-#include "canopen_core/driver_node.hpp"
+#include "canopen_402_driver/cia402_driver_interface.hpp"
 
 namespace ros2_canopen
 {
@@ -27,7 +27,7 @@ namespace ros2_canopen
  * This class provides the base functionality for creating a
  * CANopen device node. It provides callbacks for nmt and rpdo.
  */
-class Cia402Driver : public ros2_canopen::CanopenDriver
+class Cia402Driver : public Cia402DriverInterface
 {
   std::shared_ptr<node_interfaces::NodeCanopen402Driver<rclcpp::Node>> node_canopen_402_driver_;
 
