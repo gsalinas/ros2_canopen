@@ -14,8 +14,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-#ifndef CANOPEN_402_DRIVER__402_DRIVER_INTERFACE_HPP_
-#define CANOPEN_402_DRIVER__402_DRIVER_INTERFACE_HPP_
+#ifndef CANOPEN_402_DRIVER__CANOPEN_402_DRIVER_INTERFACE_HPP_
+#define CANOPEN_402_DRIVER__CANOPEN_402_DRIVER_INTERFACE_HPP_
 #include "canopen_base_driver/lely_driver_bridge.hpp"
 #include "canopen_core/driver_node.hpp"
 
@@ -31,41 +31,41 @@ class Cia402DriverInterface : public ros2_canopen::CanopenDriver
 {
 
 public:
-  Cia402DriverInterface(rclcpp::NodeOptions node_options = rclcpp::NodeOptions()) : CanopenDriver(node_options) {}
+  Cia402DriverInterface(rclcpp::NodeOptions node_options = rclcpp::NodeOptions());
 
-  virtual bool reset_node_nmt_command();
+  virtual bool reset_node_nmt_command() = 0;
   
-  virtual bool start_node_nmt_command();
+  virtual bool start_node_nmt_command() = 0;
   
-  virtual bool tpdo_transmit(ros2_canopen::COData & data);
+  virtual bool tpdo_transmit(ros2_canopen::COData & data) = 0;
   
-  virtual bool sdo_write(ros2_canopen::COData & data);
+  virtual bool sdo_write(ros2_canopen::COData & data) = 0;
 
-  virtual bool sdo_read(ros2_canopen::COData & data);
+  virtual bool sdo_read(ros2_canopen::COData & data) = 0;
 
-  virtual void register_nmt_state_cb(std::function<void(canopen::NmtState, uint8_t)> nmt_state_cb);
+  virtual void register_nmt_state_cb(std::function<void(canopen::NmtState, uint8_t)> nmt_state_cb) = 0;
 
-  virtual void register_rpdo_cb(std::function<void(COData, uint8_t)> rpdo_cb);
+  virtual void register_rpdo_cb(std::function<void(COData, uint8_t)> rpdo_cb) = 0;
 
-  virtual double get_effort();
+  virtual double get_effort() = 0;
 
-  virtual double get_speed();
+  virtual double get_speed() = 0;
 
-  virtual double get_position();
+  virtual double get_position() = 0;
 
-  virtual bool set_target(double target);
+  virtual bool set_target(double target) = 0;
 
-  virtual bool init_motor();
+  virtual bool init_motor() = 0;
 
-  virtual bool recover_motor();
+  virtual bool recover_motor() = 0;
 
-  virtual bool halt_motor();
+  virtual bool halt_motor() = 0;
 
-  virtual uint16_t get_mode();
+  virtual uint16_t get_mode() = 0;
 
-  virtual bool set_operation_mode(uint16_t mode);
+  virtual bool set_operation_mode(uint16_t mode) = 0;
   
 };
 }  // namespace ros2_canopen
 
-#endif  // CANOPEN_402_DRIVER__CANOPEN_402_DRIVER_HPP_
+#endif  // CANOPEN_402_DRIVER__CANOPEN_402_DRIVER_INTERFACE_HPP_
