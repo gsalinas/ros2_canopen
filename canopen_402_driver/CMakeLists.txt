@@ -98,7 +98,7 @@ set(node_plugins "${node_plugins}ros2_canopen::Cia402Driver;$<TARGET_FILE:cia402
 
 #### AMC
 add_library(node_canopen_amc_driver
-  src/node_interfaces/node_canopen_402_driver.cpp
+  src/node_interfaces/node_canopen_amc_driver.cpp
 )
 target_compile_features(node_canopen_amc_driver PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 target_compile_options(node_canopen_amc_driver PUBLIC -Wl,--no-undefined)
