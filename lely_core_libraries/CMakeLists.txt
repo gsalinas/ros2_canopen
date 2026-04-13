@@ -19,7 +19,7 @@ ExternalProject_Add(upstr_lely_core_libraries    # Name for custom target
   COMMAND git apply --whitespace=fix --reject ${CMAKE_CURRENT_SOURCE_DIR}/patches/0001-Fix-dcf-tools.patch
   #CONFIGURE step execute autoreconf and configure
   CONFIGURE_COMMAND autoreconf -i <SOURCE_DIR>
-  COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR> --disable-cython --disable-doc --disable-tests --disable-static --disable-diag
+  COMMAND <SOURCE_DIR>/configure --build ${CMAKE_HOST_SYSTEM_PROCESSOR}-linux-gnu --host ${CMAKE_LIBRARY_ARCHITECTURE} --prefix=<INSTALL_DIR> --disable-cython --disable-doc --disable-tests --disable-static --disable-diag
   #BUILD STEP execute make
   BUILD_COMMAND $(MAKE) -C ${CMAKE_CURRENT_BINARY_DIR}/build
   #INSTALL STEP do nothing as we install in main
