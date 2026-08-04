@@ -235,7 +235,7 @@ protected:
           rclcpp::get_logger("cia402_slave"), "Move from %f to %f", actual_position,
           target_position);
         {
-          MotionGenerator gen(profile_accerlation, profile_speed, actual_position);
+          MotionGenerator gen(profile_speed, profile_accerlation, actual_position);
 
           while (!gen.getFinished())
           {
