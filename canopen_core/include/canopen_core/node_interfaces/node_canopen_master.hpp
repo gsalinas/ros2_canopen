@@ -318,15 +318,16 @@ public:
       throw MasterException("Cleanup: master is still active");
     }
     this->cleanup(true);
-    io_guard_.reset();
-    ctx_.reset();
-    poll_.reset();
-    loop_.reset();
-
-    exec_.reset();
-    timer_.reset();
-    ctrl_.reset();
+    // Reverse of creation order in activate(): each lely object unregisters
+    // from the ones it was built on (e.g. ~Poll removes itself from ctx_).
     chan_.reset();
+    ctrl_.reset();
+    timer_.reset();
+    exec_.reset();
+    loop_.reset();
+    poll_.reset();
+    ctx_.reset();
+    io_guard_.reset();
     this->configured_.store(false);
     this->master_set_.store(false);
   }
