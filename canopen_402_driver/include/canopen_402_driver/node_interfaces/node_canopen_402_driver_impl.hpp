@@ -519,6 +519,19 @@ void NodeCanopen402Driver<NODETYPE>::add_to_master()
 }
 
 template <class NODETYPE>
+void NodeCanopen402Driver<NODETYPE>::remove_from_master()
+{
+  // Motors (and their modes) hold lely_driver_. Drop them first so the base
+  // releases the last reference on the lely executor while the master is
+  // alive; otherwise ~BasicDriver later erases itself from a destroyed master.
+  for (auto & ch : channels_)
+  {
+    ch.motor.reset();
+  }
+  NodeCanopenProxyDriver<NODETYPE>::remove_from_master();
+}
+
+template <class NODETYPE>
 void NodeCanopen402Driver<NODETYPE>::handle_init(
   const std_srvs::srv::Trigger::Request::SharedPtr request,
   std_srvs::srv::Trigger::Response::SharedPtr response, const uint8_t channel)

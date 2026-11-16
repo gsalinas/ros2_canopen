@@ -110,6 +110,7 @@ public:
   virtual void activate(bool called_from_base) override;
   virtual void deactivate(bool called_from_base) override;
   virtual void add_to_master() override;
+  virtual void remove_from_master() override;
 
   virtual double get_effort(uint8_t channel = 0)
   {
