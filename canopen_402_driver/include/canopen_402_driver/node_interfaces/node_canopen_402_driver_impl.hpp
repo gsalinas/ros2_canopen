@@ -444,7 +444,6 @@ template <class NODETYPE>
 void NodeCanopen402Driver<NODETYPE>::deactivate(bool called_from_base)
 {
   NodeCanopenProxyDriver<NODETYPE>::deactivate(false);
-  timer_->cancel();
 }
 
 template <class NODETYPE>

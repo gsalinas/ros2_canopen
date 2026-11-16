@@ -78,8 +78,6 @@ protected:
   uint8_t num_channels_;
   std::vector<std::string> channel_names_;
 
-  rclcpp::TimerBase::SharedPtr timer_;
-
   rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr publish_joint_state;
 
   // Global scale/offset (used as defaults)
