@@ -40,6 +40,11 @@ CanopenSystem::CanopenSystem() {}
 
 void CanopenSystem::clean()
 {
+  // Called from on_cleanup/on_shutdown and again from the destructor.
+  if (!executor_)
+  {
+    return;
+  }
   executor_->cancel();
   printf("Joining...");
   spin_thread_->join();
